@@ -1,24 +1,24 @@
-import { Flex, FlexProps, useMediaQuery } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import { Flex, FlexProps, useMediaQuery } from '@chakra-ui/react';
+import React, { useEffect } from 'react';
 
 const useFixViewport = () => {
   useEffect(() => {
     const updateCssViewportHeight = () => {
       const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
 
     updateCssViewportHeight();
-    window.addEventListener("resize", updateCssViewportHeight);
+    window.addEventListener('resize', updateCssViewportHeight);
 
     return () => {
-      window.removeEventListener("resize", updateCssViewportHeight);
+      window.removeEventListener('resize', updateCssViewportHeight);
     };
   }, []);
 };
 
 export const Viewport = (props: FlexProps) => {
-  const [isStandalone] = useMediaQuery("(display-mode: standalone)");
+  const [isStandalone] = useMediaQuery('(display-mode: standalone)');
   useFixViewport();
 
   return (
@@ -31,7 +31,7 @@ export const Viewport = (props: FlexProps) => {
       style={
         !isStandalone
           ? {
-              minHeight: "calc(var(--vh, 1vh) * 100)",
+              minHeight: 'calc(var(--vh, 1vh) * 100)',
             }
           : {}
       }

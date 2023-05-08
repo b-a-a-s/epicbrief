@@ -12,12 +12,9 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
-} from "@chakra-ui/react";
-import React, { FC } from "react";
-import {
-  FallbackProps,
-  ErrorBoundary as ReactErrorBoundary,
-} from "react-error-boundary";
+} from '@chakra-ui/react';
+import React, { FC } from 'react';
+import { FallbackProps, ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 
 const ErrorFallback = ({ error }: FallbackProps) => {
   const errorModal = useDisclosure();
@@ -34,7 +31,7 @@ const ErrorFallback = ({ error }: FallbackProps) => {
               textDecoration="underline"
               onClick={errorModal.onOpen}
               color="red.800"
-              _dark={{ color: "red.100" }}
+              _dark={{ color: 'red.100' }}
             >
               Expand
             </Button>

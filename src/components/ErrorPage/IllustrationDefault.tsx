@@ -1,11 +1,6 @@
 import { useId } from 'react';
 
-import {
-  HTMLChakraProps,
-  ThemingProps,
-  chakra,
-  useTheme,
-} from '@chakra-ui/react';
+import { HTMLChakraProps, ThemingProps, chakra, useTheme } from '@chakra-ui/react';
 
 export const IllustrationDefault = ({
   colorScheme = 'gray',
@@ -14,13 +9,7 @@ export const IllustrationDefault = ({
   const clipPathId01 = useId();
   const theme = useTheme();
   return (
-    <chakra.svg
-      width={300}
-      maxW="full"
-      viewBox="0 0 200 200"
-      fill="none"
-      {...rest}
-    >
+    <chakra.svg width={300} maxW="full" viewBox="0 0 200 200" fill="none" {...rest}>
       <g clipPath={`url(#${clipPathId01})`}>
         <path
           d="M137.841 191.869c-21.75 4.068-45.525-3.584-62.904-16.159-13.497-9.763-22.266-23.68-27.355-39.866-4.832-15.368-6.527-31.22-18.356-42.62-9.293-8.958-19.554-18.626-16.66-33.863 1.445-7.612 4.7-18.754 9.726-24.86C38.243 15.083 59.456 10.91 82.3 16.38c19.571 4.7 39.256 16.155 49.467 33.258a65.862 65.862 0 0 1 5.012 10.252c3.594 9.374 2.997 27.083 9.777 34.745 7.978 9.04 23.956 7.684 33.394 14.513 9.754 7.07 14.156 26.361 9.275 41.006-8.38 25.09-25.172 36.829-51.384 41.715Z"

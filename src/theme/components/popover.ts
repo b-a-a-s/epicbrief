@@ -1,9 +1,5 @@
 import { popoverAnatomy as parts } from '@chakra-ui/anatomy';
-import type {
-  PartsStyleFunction,
-  SystemStyleFunction,
-  SystemStyleObject,
-} from '@chakra-ui/theme-tools';
+import type { PartsStyleFunction, SystemStyleFunction, SystemStyleObject } from '@chakra-ui/theme-tools';
 import { cssVar, mode } from '@chakra-ui/theme-tools';
 
 const $popperBg = cssVar('popper-bg');

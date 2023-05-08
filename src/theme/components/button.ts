@@ -1,10 +1,4 @@
-import {
-  StyleFunctionProps,
-  SystemStyleInterpolation,
-  isAccessible,
-  mode,
-  transparentize,
-} from '@chakra-ui/theme-tools';
+import { StyleFunctionProps, SystemStyleInterpolation, isAccessible, mode, transparentize } from '@chakra-ui/theme-tools';
 
 type customVariantOptions = {
   theme: StyleFunctionProps['theme'];
@@ -80,15 +74,9 @@ const variants: Record<string, SystemStyleInterpolation> = {
 
   // Default variants
   solid: (props) => ({
-    bg:
-      props.colorScheme === 'gray'
-        ? mode('gray.100', 'whiteAlpha.100')(props)
-        : `${props.colorScheme}.600`,
+    bg: props.colorScheme === 'gray' ? mode('gray.100', 'whiteAlpha.100')(props) : `${props.colorScheme}.600`,
     _hover: {
-      bg:
-        props.colorScheme === 'gray'
-          ? mode('gray.200', 'whiteAlpha.200')(props)
-          : `${props.colorScheme}.700`,
+      bg: props.colorScheme === 'gray' ? mode('gray.200', 'whiteAlpha.200')(props) : `${props.colorScheme}.700`,
     },
   }),
   ghost: (props) => ({

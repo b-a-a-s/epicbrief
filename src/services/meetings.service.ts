@@ -1,15 +1,12 @@
-import { Meeting, MeetingList } from "../types/meetings.types";
-import {
-  createQueryKeys,
-  inferQueryKeys,
-} from "@lukemorales/query-key-factory";
+import { Meeting, MeetingList } from '../types/meetings.types';
+import { createQueryKeys, inferQueryKeys } from '@lukemorales/query-key-factory';
 import {
   // UseMutationOptions,
   UseQueryOptions, // useMutation,
   useQuery, // useQueryClient,
-} from "@tanstack/react-query";
-import Axios, { AxiosError } from "axios";
-import { DateRange } from "react-day-picker";
+} from '@tanstack/react-query';
+import Axios, { AxiosError } from 'axios';
+import { DateRange } from 'react-day-picker';
 
 // type UserMutateError = {
 // title: string;
@@ -17,19 +14,13 @@ import { DateRange } from "react-day-picker";
 // };
 
 export const sortMeetingList = (meetings: Meeting[], sort: string) => {
-  if (sort === "NEWEST") {
+  if (sort === 'NEWEST') {
     return meetings.sort((a, b) => {
-      return (
-        new Date(b.properties.hs_meeting_start_time).getTime() -
-        new Date(a.properties.hs_meeting_start_time).getTime()
-      );
+      return new Date(b.properties.hs_meeting_start_time).getTime() - new Date(a.properties.hs_meeting_start_time).getTime();
     });
-  } else if (sort === "OLDEST") {
+  } else if (sort === 'OLDEST') {
     return meetings.sort((a, b) => {
-      return (
-        new Date(a.properties.hs_meeting_start_time).getTime() -
-        new Date(b.properties.hs_meeting_start_time).getTime()
-      );
+      return new Date(a.properties.hs_meeting_start_time).getTime() - new Date(b.properties.hs_meeting_start_time).getTime();
     });
   } else {
     return meetings;
@@ -37,7 +28,7 @@ export const sortMeetingList = (meetings: Meeting[], sort: string) => {
 };
 
 export const filterMeetingList = (meetings: Meeting[], filter: string) => {
-  if (filter === "ALL") {
+  if (filter === 'ALL') {
     return meetings;
   } else {
     return meetings.filter((meeting) => {
@@ -46,27 +37,22 @@ export const filterMeetingList = (meetings: Meeting[], filter: string) => {
   }
 };
 
-export const rangeMeetingList = (
-  meetings: Meeting[],
-  range: DateRange | undefined
-) => {
+export const rangeMeetingList = (meetings: Meeting[], range: DateRange | undefined) => {
   if (!range || !range.from || !range.to) {
     return meetings;
   } else {
     return meetings.filter((meeting) => {
       return (
         range.from &&
-        new Date(meeting.properties.hs_meeting_start_time).getTime() >=
-          range.from.getTime() &&
+        new Date(meeting.properties.hs_meeting_start_time).getTime() >= range.from.getTime() &&
         range.to &&
-        new Date(meeting.properties.hs_meeting_start_time).getTime() <=
-          range.to.getTime()
+        new Date(meeting.properties.hs_meeting_start_time).getTime() <= range.to.getTime()
       );
     });
   }
 };
 
-const usersKeys = createQueryKeys("usersService", {
+const usersKeys = createQueryKeys('usersService', {
   meetings: (params: { limit?: number; after?: number }) => [params],
   users: (params: { page?: number; size?: number }) => [params],
   user: (params: { login?: string }) => [params],
@@ -75,22 +61,14 @@ type UsersKeys = inferQueryKeys<typeof usersKeys>;
 
 export const useMeetingList = (
   { page = 0, size = 10, limit = 20 } = {},
-  config: UseQueryOptions<
-    MeetingList,
-    AxiosError,
-    MeetingList,
-    UsersKeys["meetings"]["queryKey"]
-  > = {}
+  config: UseQueryOptions<MeetingList, AxiosError, MeetingList, UsersKeys['meetings']['queryKey']> = {}
 ) => {
   const result = useQuery(
     usersKeys.meetings({ limit: 20, after: 0 }).queryKey,
-    (): Promise<MeetingList> =>
-      Axios.get(
-        "https://us-central1-epicbrief-c47c8.cloudfunctions.net/meetings"
-      ),
+    (): Promise<MeetingList> => Axios.get('https://us-central1-epicbrief-c47c8.cloudfunctions.net/meetings'),
     { keepPreviousData: true, ...config }
   );
-  console.log("result", result.data);
+  console.log('result', result.data);
 
   const { meetings, contacts } = result.data || {};
   const totalItems = meetings?.length;

@@ -1,10 +1,6 @@
 import { alertAnatomy as parts } from '@chakra-ui/anatomy';
 import { getColor, mode, transparentize } from '@chakra-ui/theme-tools';
-import type {
-  PartsStyleFunction,
-  PartsStyleObject,
-  StyleFunctionProps,
-} from '@chakra-ui/theme-tools';
+import type { PartsStyleFunction, PartsStyleObject, StyleFunctionProps } from '@chakra-ui/theme-tools';
 
 const baseStyle: PartsStyleObject<typeof parts> = {
   container: {

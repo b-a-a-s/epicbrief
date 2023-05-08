@@ -1,2 +1,2 @@
-import "./axios";
-import "./dayjs";
+import './axios';
+import './dayjs';

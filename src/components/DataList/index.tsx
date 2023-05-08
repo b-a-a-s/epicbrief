@@ -9,9 +9,9 @@ import {
   Flex,
   FlexProps,
   useBreakpointValue,
-} from "@chakra-ui/react";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
-import React, { FC, useContext, useEffect, useRef, useState } from "react";
+} from '@chakra-ui/react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 
 type DataListColumns = Record<string, DataListCellProps>;
 type DataListContextValue = {
@@ -21,11 +21,8 @@ type DataListContextValue = {
 };
 type DataListHeaderContextValue = boolean;
 
-export const DataListContext = React.createContext<DataListContextValue>(
-  {} as any
-);
-export const DataListHeaderContext =
-  React.createContext<DataListHeaderContextValue>(false);
+export const DataListContext = React.createContext<DataListContextValue>({} as any);
+export const DataListHeaderContext = React.createContext<DataListHeaderContextValue>(false);
 
 export type DataListCellProps = FlexProps & {
   colName?: string;
@@ -33,13 +30,7 @@ export type DataListCellProps = FlexProps & {
   isVisible?: boolean | boolean[] | Record<string, boolean>;
 };
 
-export const DataListCell = ({
-  children,
-  colName,
-  colWidth = 1,
-  isVisible = true,
-  ...rest
-}: DataListCellProps) => {
+export const DataListCell = ({ children, colName, colWidth = 1, isVisible = true, ...rest }: DataListCellProps) => {
   const { columns, setColumns } = useContext(DataListContext);
   const isInHeader = useContext(DataListHeaderContext);
   const restRef = useRef(rest);
@@ -54,7 +45,7 @@ export const DataListCell = ({
     }
   }, [isInHeader, colName, colWidth, isVisible, setColumns]);
 
-  const headerProps = !isInHeader ? columns?.[colName ?? ""] ?? {} : {};
+  const headerProps = !isInHeader ? columns?.[colName ?? ''] ?? {} : {};
   const {
     isVisible: _isVisible = true,
     colWidth: _colWidth = true,
@@ -66,14 +57,9 @@ export const DataListCell = ({
     ...rest,
   };
 
-  const showCell = useBreakpointValue(
-    typeof _isVisible === "object" ? _isVisible : { base: _isVisible }
-  );
+  const showCell = useBreakpointValue(typeof _isVisible === 'object' ? _isVisible : { base: _isVisible });
 
-  const cellWidth =
-    useBreakpointValue(
-      typeof _colWidth === "object" ? _colWidth : { base: _colWidth }
-    ) ?? 0;
+  const cellWidth = useBreakpointValue(typeof _colWidth === 'object' ? _colWidth : { base: _colWidth }) ?? 0;
 
   if (!showCell) return null;
 
@@ -83,9 +69,7 @@ export const DataListCell = ({
     <Flex
       direction="column"
       minW={!isWidthUnitless ? String(cellWidth) : 0}
-      flexBasis={
-        isWidthUnitless ? `${Number(cellWidth) * 100}%` : String(cellWidth)
-      }
+      flexBasis={isWidthUnitless ? `${Number(cellWidth) * 100}%` : String(cellWidth)}
       py="2"
       px="3"
       align="flex-start"
@@ -102,39 +86,15 @@ export const DataListAccordion = ({ ...rest }) => {
 };
 
 export const DataListAccordionButton = ({ ...rest }) => {
-  return (
-    <AccordionButton
-      role="group"
-      p="0"
-      textAlign="left"
-      _focusVisible={{ outline: "none" }}
-      _hover={{}}
-      {...rest}
-    />
-  );
+  return <AccordionButton role="group" p="0" textAlign="left" _focusVisible={{ outline: 'none' }} _hover={{}} {...rest} />;
 };
 
 export const DataListAccordionIcon = ({ ...rest }) => {
-  return (
-    <AccordionIcon
-      borderRadius="full"
-      _groupFocusVisible={{ boxShadow: "outline" }}
-      {...rest}
-    />
-  );
+  return <AccordionIcon borderRadius="full" _groupFocusVisible={{ boxShadow: 'outline' }} {...rest} />;
 };
 
 export const DataListAccordionPanel = ({ ...rest }) => {
-  return (
-    <AccordionPanel
-      boxShadow="inner"
-      px="4"
-      py="3"
-      bg="gray.50"
-      _dark={{ bg: "blackAlpha.400" }}
-      {...rest}
-    />
-  );
+  return <AccordionPanel boxShadow="inner" px="4" py="3" bg="gray.50" _dark={{ bg: 'blackAlpha.400' }} {...rest} />;
 };
 
 export type DataListRowProps = FlexProps & {
@@ -142,25 +102,19 @@ export type DataListRowProps = FlexProps & {
   isDisabled?: boolean;
 };
 
-export const DataListRow: FC<React.PropsWithChildren<DataListRowProps>> = ({
-  isVisible = true,
-  isDisabled = false,
-  ...rest
-}) => {
+export const DataListRow: FC<React.PropsWithChildren<DataListRowProps>> = ({ isVisible = true, isDisabled = false, ...rest }) => {
   const { isHover } = useContext(DataListContext);
-  const showRow = useBreakpointValue(
-    typeof isVisible === "object" ? isVisible : { base: isVisible }
-  );
+  const showRow = useBreakpointValue(typeof isVisible === 'object' ? isVisible : { base: isVisible });
   const disabledProps = isDisabled
     ? {
-        bg: "gray.50",
-        _dark: { borderBottomColor: "gray.900", bg: "whiteAlpha.50" },
+        bg: 'gray.50',
+        _dark: { borderBottomColor: 'gray.900', bg: 'whiteAlpha.50' },
         _hover: {},
         _focusVisible: {},
-        "aria-disabled": true,
-        opacity: "1 !important",
+        'aria-disabled': true,
+        opacity: '1 !important',
         css: {
-          "> *": {
+          '> *': {
             opacity: 0.3,
           },
         },
@@ -168,16 +122,16 @@ export const DataListRow: FC<React.PropsWithChildren<DataListRowProps>> = ({
     : {};
   return (
     <Flex
-      d={!showRow ? "none" : undefined}
+      d={!showRow ? 'none' : undefined}
       position="relative"
       borderBottom="1px solid"
       borderBottomColor="gray.100"
       transition="0.2s"
       _dark={{
-        borderBottomColor: "gray.900",
-        _hover: isHover ? { bg: "blackAlpha.200" } : undefined,
+        borderBottomColor: 'gray.900',
+        _hover: isHover ? { bg: 'blackAlpha.200' } : undefined,
       }}
-      _hover={isHover ? { bg: "gray.50" } : undefined}
+      _hover={isHover ? { bg: 'gray.50' } : undefined}
       {...disabledProps}
       {...rest}
     />
@@ -186,9 +140,7 @@ export const DataListRow: FC<React.PropsWithChildren<DataListRowProps>> = ({
 
 export type DataListHeaderProps = DataListRowProps;
 
-export const DataListHeader: FC<
-  React.PropsWithChildren<DataListHeaderProps>
-> = ({ ...rest }) => {
+export const DataListHeader: FC<React.PropsWithChildren<DataListHeaderProps>> = ({ ...rest }) => {
   return (
     <DataListHeaderContext.Provider value={true}>
       <DataListRow
@@ -198,7 +150,7 @@ export const DataListHeader: FC<
         _hover={{}}
         bg="gray.100"
         color="gray.600"
-        _dark={{ bg: "blackAlpha.400", color: "gray.300" }}
+        _dark={{ bg: 'blackAlpha.400', color: 'gray.300' }}
         {...rest}
       />
     </DataListHeaderContext.Provider>
@@ -207,9 +159,7 @@ export const DataListHeader: FC<
 
 export type DataListFooterProps = DataListRowProps;
 
-export const DataListFooter: FC<
-  React.PropsWithChildren<DataListFooterProps>
-> = ({ ...rest }) => {
+export const DataListFooter: FC<React.PropsWithChildren<DataListFooterProps>> = ({ ...rest }) => {
   return (
     <Box mt="auto">
       <Flex
@@ -222,9 +172,9 @@ export const DataListFooter: FC<
         borderTopColor="gray.100"
         color="gray.600"
         _dark={{
-          bg: "blackAlpha.50",
-          color: "gray.300",
-          borderTopColor: "gray.900",
+          bg: 'blackAlpha.50',
+          color: 'gray.300',
+          borderTopColor: 'gray.900',
         }}
         {...rest}
       />
@@ -266,7 +216,7 @@ export const DataList: FC<React.PropsWithChildren<DataListProps>> = ({
         allowToggle={allowToggle}
         bg="white"
         _dark={{
-          bg: "blackAlpha.400",
+          bg: 'blackAlpha.400',
         }}
         ref={listRef}
         {...rest}

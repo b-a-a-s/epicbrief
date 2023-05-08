@@ -1,6 +1,4 @@
 {
-  "extends": [
-    "plugin:@typescript-eslint/recommended"
-  ],
+  "extends": ["plugin:@typescript-eslint/recommended"],
   "rules": {}
 }

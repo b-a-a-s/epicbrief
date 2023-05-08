@@ -1,5 +1,5 @@
-import { chakra, useTheme } from "@chakra-ui/react";
-import React from "react";
+import { chakra, useTheme } from '@chakra-ui/react';
+import React from 'react';
 
 // <svg width="177" height="32" >
 export const Logo = ({ ...rest }) => {
@@ -9,16 +9,8 @@ export const Logo = ({ ...rest }) => {
     <chakra.svg h="1.8rem" fill="none" viewBox="0 0 177 32" {...rest}>
       <title>Epicbrief</title>
       <path d="M0 0H29.6V12.8H0V0Z" fill="white" fill-opacity="0.9" />
-      <path
-        d="M0 15.1992H29.6V23.9992H0V15.1992Z"
-        fill="white"
-        fill-opacity="0.9"
-      />
-      <path
-        d="M0 26.3984H29.6V31.9984H0V26.3984Z"
-        fill="white"
-        fill-opacity="0.9"
-      />
+      <path d="M0 15.1992H29.6V23.9992H0V15.1992Z" fill="white" fill-opacity="0.9" />
+      <path d="M0 26.3984H29.6V31.9984H0V26.3984Z" fill="white" fill-opacity="0.9" />
       <path
         d="M49.4028 26.0469C52.9228 26.0469 55.8988 24.3829 57.4988 21.5029L52.6668 20.2229C51.8668 21.0869 50.7788 21.5349 49.5948 21.5349C47.5788 21.5349 46.2348 20.6389 45.8508 19.1029H57.8188C57.8828 18.7189 57.9148 18.2069 57.9148 17.5029C57.9148 12.6709 54.1068 8.99088 49.0828 8.99088C44.0588 8.99088 40.2188 12.6709 40.2188 17.5029C40.2188 22.4949 44.0268 26.0469 49.4028 26.0469ZM45.9148 15.7429C46.2988 14.3669 47.5468 13.4709 49.1468 13.4709C50.7148 13.4709 51.8988 14.3669 52.2508 15.7429H45.9148Z"
         fill="white"

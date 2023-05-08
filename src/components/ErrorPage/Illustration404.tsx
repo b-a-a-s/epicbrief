@@ -1,11 +1,6 @@
 import { useId } from 'react';
 
-import {
-  HTMLChakraProps,
-  ThemingProps,
-  chakra,
-  useTheme,
-} from '@chakra-ui/react';
+import { HTMLChakraProps, ThemingProps, chakra, useTheme } from '@chakra-ui/react';
 
 export const Illustration404 = ({
   colorScheme = 'gray',
@@ -15,13 +10,7 @@ export const Illustration404 = ({
   const clipPathId02 = useId();
   const theme = useTheme();
   return (
-    <chakra.svg
-      width={300}
-      maxW="full"
-      viewBox="0 0 200 200"
-      fill="none"
-      {...rest}
-    >
+    <chakra.svg width={300} maxW="full" viewBox="0 0 200 200" fill="none" {...rest}>
       <g clipPath={`url(#${clipPathId01})`}>
         <g clipPath={`url(#${clipPathId02})`}>
           <path
@@ -238,10 +227,7 @@ export const Illustration404 = ({
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <path
-            d="M150.103 41.13a.914.914 0 10-1.19-1.39.914.914 0 001.19 1.39z"
-            fill={theme.colors[colorScheme][900]}
-          />
+          <path d="M150.103 41.13a.914.914 0 10-1.19-1.39.914.914 0 001.19 1.39z" fill={theme.colors[colorScheme][900]} />
           <path
             d="M141.488 47.298a1.555 1.555 0 01-.369-1.136 1.56 1.56 0 01.544-1.063l2.276-1.954a1.567 1.567 0 012.204.175v0a1.57 1.57 0 01.371 1.135 1.56 1.56 0 01-.542 1.065l-2.28 1.953a1.563 1.563 0 01-2.204-.175z"
             fill={theme.colors.white}
@@ -389,10 +375,7 @@ export const Illustration404 = ({
             d="M140.171 39.7a3.252 3.252 0 11.201-4.44 3.123 3.123 0 01.822 2.262 3.15 3.15 0 01-.294 1.191c-.176.374-.424.71-.729.987zM136.842 32.196a.966.966 0 01-1.605-.799.965.965 0 011.708-.545.965.965 0 01-.103 1.344z"
             fill={theme.colors.white}
           />
-          <path
-            d="M41.163 109.457l-2.876-.283-.41 4.155 2.877.283.409-4.155z"
-            fill={theme.colors[colorScheme][900]}
-          />
+          <path d="M41.163 109.457l-2.876-.283-.41 4.155 2.877.283.409-4.155z" fill={theme.colors[colorScheme][900]} />
         </g>
       </g>
       <defs>
@@ -400,11 +383,7 @@ export const Illustration404 = ({
           <path fill={theme.colors.white} d="M0 0h200v200H0z" />
         </clipPath>
         <clipPath id={clipPathId02}>
-          <path
-            fill={theme.colors.white}
-            transform="translate(-18 -11)"
-            d="M0 0h224v224H0z"
-          />
+          <path fill={theme.colors.white} transform="translate(-18 -11)" d="M0 0h224v224H0z" />
         </clipPath>
       </defs>
     </chakra.svg>

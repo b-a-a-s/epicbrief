@@ -1,16 +1,8 @@
-import { useFocusMode, useLayoutContext } from "../Layout/Layout";
-import {
-  Box,
-  Flex,
-  FlexProps,
-  HStack,
-  IconButton,
-  Stack,
-  useTheme,
-} from "@chakra-ui/react";
-import React, { useContext } from "react";
-import { FiArrowLeft } from "react-icons/fi";
-import useMeasure from "react-use-measure";
+import { useFocusMode, useLayoutContext } from '../Layout/Layout';
+import { Box, Flex, FlexProps, HStack, IconButton, Stack, useTheme } from '@chakra-ui/react';
+import React, { useContext } from 'react';
+import { FiArrowLeft } from 'react-icons/fi';
+import useMeasure from 'react-use-measure';
 
 type PageContextValue = {
   hideContainer: boolean;
@@ -20,11 +12,11 @@ type PageContextValue = {
 const PageContext = React.createContext<PageContextValue>(null as any);
 
 const containerSizes = {
-  sm: "60ch",
-  md: "80ch",
-  lg: "100ch",
-  xl: "140ch",
-  full: "100%",
+  sm: '60ch',
+  md: '80ch',
+  lg: '100ch',
+  xl: '140ch',
+  full: '100%',
 } as const;
 
 const PageContainer = ({ children, ...rest }: FlexProps) => {
@@ -33,15 +25,7 @@ const PageContainer = ({ children, ...rest }: FlexProps) => {
   if (hideContainer) return <>{children}</>;
 
   return (
-    <Flex
-      direction="column"
-      flex="1"
-      w="full"
-      px="6"
-      mx="auto"
-      maxW={containerSizes[containerSize]}
-      {...rest}
-    >
+    <Flex direction="column" flex="1" w="full" px="6" mx="auto" maxW={containerSizes[containerSize]} {...rest}>
       {children}
     </Flex>
   );
@@ -53,13 +37,7 @@ type PageTopBarProps = FlexProps & {
   isFixed?: boolean;
 };
 
-export const PageTopBar = ({
-  children,
-  onBack = () => undefined,
-  showBack = false,
-  isFixed = false,
-  ...rest
-}: PageTopBarProps) => {
+export const PageTopBar = ({ children, onBack = () => undefined, showBack = false, isFixed = false, ...rest }: PageTopBarProps) => {
   const { isFocusMode } = useLayoutContext();
   const theme = useTheme();
   const [ref, { height }] = useMeasure();
@@ -75,13 +53,13 @@ export const PageTopBar = ({
         boxShadow="0 4px 20px rgba(0, 0, 0, 0.05)"
         bg="white"
         ref={ref}
-        _dark={{ bg: "gray.900" }}
+        _dark={{ bg: 'gray.900' }}
         {...(isFixed
           ? {
-              top: !isFocusMode ? theme.layout.topBar.height : "0",
-              position: "fixed",
-              right: "0",
-              left: "0",
+              top: !isFocusMode ? theme.layout.topBar.height : '0',
+              position: 'fixed',
+              right: '0',
+              left: '0',
             }
           : {})}
         {...rest}
@@ -90,13 +68,8 @@ export const PageTopBar = ({
         <PageContainer>
           <HStack spacing="4">
             {showBack && (
-              <Box ms={{ base: 0, lg: "-3.5rem" }}>
-                <IconButton
-                  aria-label="Go Back"
-                  icon={<FiArrowLeft />}
-                  variant="ghost"
-                  onClick={() => onBack()}
-                />
+              <Box ms={{ base: 0, lg: '-3.5rem' }}>
+                <IconButton aria-label="Go Back" icon={<FiArrowLeft />} variant="ghost" onClick={() => onBack()} />
               </Box>
             )}
             <Box flex="1">{children}</Box>
@@ -116,14 +89,10 @@ export const PageContent = ({ children, ...rest }: PageContentProps) => {
   return (
     <Flex zIndex="1" direction="column" flex="1" py="4" {...rest}>
       <PageContainer>
-        <Stack
-          direction={{ base: "column", lg: "row" }}
-          spacing={{ base: "4", lg: "8" }}
-          flex="1"
-        >
+        <Stack direction={{ base: 'column', lg: 'row' }} spacing={{ base: '4', lg: '8' }} flex="1">
           <Flex direction="column" flex="1" minW="0">
-            {" "}
-            {children}{" "}
+            {' '}
+            {children}{' '}
           </Flex>
         </Stack>
       </PageContainer>
@@ -150,7 +119,7 @@ export const PageBottomBar = ({ children, ...rest }: FlexProps) => {
         py="2"
         boxShadow="0 -4px 20px rgba(0, 0, 0, 0.05)"
         bg="white"
-        _dark={{ bg: "gray.900" }}
+        _dark={{ bg: 'gray.900' }}
         {...rest}
       >
         <PageContainer>{children}</PageContainer>
@@ -162,16 +131,11 @@ export const PageBottomBar = ({ children, ...rest }: FlexProps) => {
 
 type PageProps = FlexProps & {
   isFocusMode?: boolean;
-  containerSize?: "sm" | "md" | "lg" | "xl" | "full";
+  containerSize?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   hideContainer?: boolean;
 };
 
-export const Page = ({
-  isFocusMode = false,
-  hideContainer = false,
-  containerSize = "md",
-  ...rest
-}: PageProps) => {
+export const Page = ({ isFocusMode = false, hideContainer = false, containerSize = 'md', ...rest }: PageProps) => {
   useFocusMode(isFocusMode);
   return (
     <PageContext.Provider value={{ hideContainer, containerSize }}>

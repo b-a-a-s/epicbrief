@@ -1,4 +1,4 @@
-import { DataListFooter } from "../../components/DataList";
+import { DataListFooter } from '../../components/DataList';
 import {
   Pagination,
   PaginationButtonFirstPage,
@@ -6,8 +6,8 @@ import {
   PaginationButtonNextPage,
   PaginationButtonPrevPage,
   PaginationInfo,
-} from "../../components/Pagination";
-import React from "react";
+} from '../../components/Pagination';
+import React from 'react';
 
 type MeetingsFooterProps = {
   isLoadingPage: boolean;
@@ -17,22 +17,10 @@ type MeetingsFooterProps = {
   totalItems: number;
 };
 
-export const MeetingsFooter = ({
-  isLoadingPage,
-  setPage,
-  page,
-  pageSize,
-  totalItems,
-}: MeetingsFooterProps) => {
+export const MeetingsFooter = ({ isLoadingPage, setPage, page, pageSize, totalItems }: MeetingsFooterProps) => {
   return (
     <DataListFooter>
-      <Pagination
-        isLoadingPage={isLoadingPage}
-        setPage={setPage}
-        page={page}
-        pageSize={pageSize}
-        totalItems={totalItems}
-      >
+      <Pagination isLoadingPage={isLoadingPage} setPage={setPage} page={page} pageSize={pageSize} totalItems={totalItems}>
         <PaginationButtonFirstPage />
         <PaginationButtonPrevPage />
         <PaginationInfo flex="1" />
