@@ -1,9 +1,11 @@
+import React, { Suspense, useCallback } from 'react';
+
+import { Center, Spinner } from '@chakra-ui/react';
+import { BrowserRouter, Route, Routes, useNavigate, useSearchParams } from 'react-router-dom';
+
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { ErrorPage } from '../../components/ErrorPage';
 import { Layout } from '../Layout/Layout';
-import { Center, Spinner } from '@chakra-ui/react';
-import React, { Suspense, useCallback } from 'react';
-import { BrowserRouter, Route, Routes, useSearchParams, useNavigate } from 'react-router-dom';
 
 export const Loader = () => (
   <Center flex="1">
@@ -34,13 +36,8 @@ export const useRedirectFromUrl = (defaultTo = '/') => {
 };
 
 const MeetingsView = React.lazy(() => import('../MeetingsView/MeetingsView'));
-// const MeetingCreateView = React.lazy(
-// () => import("@/spa/views/MeetingCreateView")
-// );
-// const MeetingUpdateView = React.lazy(
-// () => import("@/spa/views/MeetingUpdateView")
-// );
-// const ApiView = React.lazy(() => import("@/spa/views/ApiView"));
+const MeetingCreateView = React.lazy(() => import('../MeetingCreateView/MeetingCreateView'));
+const MeetingUpdateView = React.lazy(() => import('../MeetingUpdateView/MeetingUpdateView'));
 
 export const Router = () => {
   return (
@@ -50,6 +47,8 @@ export const Router = () => {
           <Suspense fallback={<Loader />}>
             <Routes>
               <Route path="/" element={<MeetingsView />} />
+              <Route path="/new" element={<MeetingCreateView />} />
+              <Route path="/:id" element={<MeetingUpdateView />} />
               <Route path="*" element={<ErrorPage errorCode={404} />} />
             </Routes>
           </Suspense>

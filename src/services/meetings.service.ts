@@ -1,71 +1,45 @@
-import { Meeting, MeetingList } from '../types/meetings.types';
 import { createQueryKeys, inferQueryKeys } from '@lukemorales/query-key-factory';
-import {
-  // UseMutationOptions,
-  UseQueryOptions, // useMutation,
-  useQuery, // useQueryClient,
-} from '@tanstack/react-query';
+import { UseMutationOptions, UseQueryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Axios, { AxiosError } from 'axios';
 import { DateRange } from 'react-day-picker';
+
+// import { useToastError, useToastSuccess } from '../../components/Toast';
+import { Meeting, MeetingList } from '../types/meetings.types';
+
+type MeetingWithIdOnly = { id: string };
 
 // type UserMutateError = {
 // title: string;
 // errorKey: "userexists" | "emailexists";
 // };
 
-export const sortMeetingList = (meetings: Meeting[], sort: string) => {
-  if (sort === 'NEWEST') {
-    return meetings.sort((a, b) => {
-      return new Date(b.properties.hs_meeting_start_time).getTime() - new Date(a.properties.hs_meeting_start_time).getTime();
-    });
-  } else if (sort === 'OLDEST') {
-    return meetings.sort((a, b) => {
-      return new Date(a.properties.hs_meeting_start_time).getTime() - new Date(b.properties.hs_meeting_start_time).getTime();
-    });
-  } else {
-    return meetings;
-  }
+const MEETINGS_API_BASE_URL = 'https://us-central1-epicbrief-c47c8.cloudfunctions.net/meetings';
+// const MEETINGS_API_BASE_URL = 'http://127.0.0.1:5001/epicbrief-c47c8/us-central1/meetings';
+
+export const useMeetingRemove = (config: UseMutationOptions<void, unknown, MeetingWithIdOnly> = {}) => {
+  const queryClient = useQueryClient();
+  return useMutation((meeting: MeetingWithIdOnly): Promise<void> => Axios.delete(`${MEETINGS_API_BASE_URL}/${meeting.id}`), {
+    ...config,
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries(meetingsKeys.meetings._def);
+      config?.onSuccess?.(...args);
+    },
+  });
 };
 
-export const filterMeetingList = (meetings: Meeting[], filter: string) => {
-  if (filter === 'ALL') {
-    return meetings;
-  } else {
-    return meetings.filter((meeting) => {
-      return meeting.properties.hs_meeting_outcome === filter;
-    });
-  }
-};
-
-export const rangeMeetingList = (meetings: Meeting[], range: DateRange | undefined) => {
-  if (!range || !range.from || !range.to) {
-    return meetings;
-  } else {
-    return meetings.filter((meeting) => {
-      return (
-        range.from &&
-        new Date(meeting.properties.hs_meeting_start_time).getTime() >= range.from.getTime() &&
-        range.to &&
-        new Date(meeting.properties.hs_meeting_start_time).getTime() <= range.to.getTime()
-      );
-    });
-  }
-};
-
-const usersKeys = createQueryKeys('usersService', {
+const meetingsKeys = createQueryKeys('usersService', {
   meetings: (params: { limit?: number; after?: number }) => [params],
-  users: (params: { page?: number; size?: number }) => [params],
-  user: (params: { login?: string }) => [params],
 });
-type UsersKeys = inferQueryKeys<typeof usersKeys>;
+
+type MeetingsKeys = inferQueryKeys<typeof meetingsKeys>;
 
 export const useMeetingList = (
   { page = 0, size = 10, limit = 20 } = {},
-  config: UseQueryOptions<MeetingList, AxiosError, MeetingList, UsersKeys['meetings']['queryKey']> = {}
+  config: UseQueryOptions<MeetingList, AxiosError, MeetingList, MeetingsKeys['meetings']['queryKey']> = {}
 ) => {
   const result = useQuery(
-    usersKeys.meetings({ limit: 20, after: 0 }).queryKey,
-    (): Promise<MeetingList> => Axios.get('https://us-central1-epicbrief-c47c8.cloudfunctions.net/meetings'),
+    meetingsKeys.meetings({ limit: 20, after: 0 }).queryKey,
+    (): Promise<MeetingList> => Axios.get(`${MEETINGS_API_BASE_URL}?limit=${limit}&after=${page}`),
     { keepPreviousData: true, ...config }
   );
   console.log('result', result.data);
@@ -166,21 +140,41 @@ export const useMeetingList = (
 // );
 // };
 
-// type UserWithLoginOnly = Pick<User, "login">;
+export const sortMeetingList = (meetings: Meeting[], sort: string) => {
+  if (sort === 'NEWEST') {
+    return meetings.sort((a, b) => {
+      return new Date(b.properties.hs_meeting_start_time).getTime() - new Date(a.properties.hs_meeting_start_time).getTime();
+    });
+  } else if (sort === 'OLDEST') {
+    return meetings.sort((a, b) => {
+      return new Date(a.properties.hs_meeting_start_time).getTime() - new Date(b.properties.hs_meeting_start_time).getTime();
+    });
+  } else {
+    return meetings;
+  }
+};
 
-// export const useUserRemove = (
-// config: UseMutationOptions<void, unknown, UserWithLoginOnly> = {}
-// ) => {
-// const queryClient = useQueryClient();
-// return useMutation(
-// (user: UserWithLoginOnly): Promise<void> =>
-// Axios.delete(`/admin/users/${user.login}`),
-// {
-// ...config,
-// onSuccess: (...args) => {
-// queryClient.invalidateQueries(usersKeys.users._def);
-// config?.onSuccess?.(...args);
-// },
-// }
-// );
-// };
+export const filterMeetingList = (meetings: Meeting[], filter: string) => {
+  if (filter === 'ALL') {
+    return meetings;
+  } else {
+    return meetings.filter((meeting) => {
+      return meeting.properties.hs_meeting_outcome === filter;
+    });
+  }
+};
+
+export const rangeMeetingList = (meetings: Meeting[], range: DateRange | undefined) => {
+  if (!range || !range.from || !range.to) {
+    return meetings;
+  } else {
+    return meetings.filter((meeting) => {
+      return (
+        range.from &&
+        new Date(meeting.properties.hs_meeting_start_time).getTime() >= range.from.getTime() &&
+        range.to &&
+        new Date(meeting.properties.hs_meeting_start_time).getTime() <= range.to.getTime()
+      );
+    });
+  }
+};

@@ -7,6 +7,8 @@ import { BiCalendar, BiFilter, BiSort } from 'react-icons/bi';
 import { FiChevronDown, FiEdit, FiPlus } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
+import { useToastError, useToastSuccess } from '../../components/Toast';
+import { useMeetingRemove } from '../../services/meetings.service';
 import { MeetingFilterType, MeetingSortType } from '../../types/meetings.types';
 
 type MeetingsActionsProps = {
@@ -16,6 +18,7 @@ type MeetingsActionsProps = {
   setFilter: (filter: MeetingFilterType) => void;
   range: DateRange | undefined;
   setRange: (range: DateRange | undefined) => void;
+  selected: string[];
   selectedAll: boolean;
   toggleSelectedAll: () => void;
   invertSelected: () => void;
@@ -34,11 +37,12 @@ const ActionsOptions = ({
   selectedAll,
   toggleSelectedAll,
   invertSelected,
-}: Pick<MeetingsActionsProps, 'selectedAll' | 'toggleSelectedAll' | 'invertSelected'>) => (
+  removeMeeting,
+}: Pick<MeetingsActionsProps, 'selectedAll' | 'toggleSelectedAll' | 'invertSelected'> & { removeMeeting: () => void }) => (
   <MenuList>
     <MenuItem onClick={toggleSelectedAll}>{selectedAll ? <b>Unselect All</b> : 'Select All'}</MenuItem>
     <MenuItem onClick={invertSelected}>Invert Selection</MenuItem>
-    <MenuItem>Delete Selected</MenuItem>
+    <MenuItem onClick={() => removeMeeting()}>Delete Selected</MenuItem>
   </MenuList>
 );
 
@@ -56,10 +60,25 @@ export const MeetingsActions = ({
   setFilter,
   range,
   setRange,
+  selected,
   selectedAll,
   toggleSelectedAll,
   invertSelected,
 }: MeetingsActionsProps) => {
+  const toastSuccess = useToastSuccess();
+  const toastError = useToastError();
+
+  const meetingRemove = useMeetingRemove({
+    onSuccess: (_, { id }) => {
+      toastSuccess({ title: 'Meeting deleted', description: `Meeting ${id} has been deleted.` });
+    },
+    onError: (_, { id }) => {
+      toastError({ title: 'Meeting delete error', description: `Meeting ${id} could not be deleted.` });
+    },
+  });
+  const removeMeeting = () => meetingRemove.mutate({ id: selected.join(',') });
+  const isRemovalLoading = meetingRemove.isLoading;
+
   let period = 'Period';
   if (range?.from) {
     if (!range.to) {
@@ -90,20 +109,43 @@ export const MeetingsActions = ({
       </Box>
       <Box>
         <Menu>
-          <MenuButton as={Button} leftIcon={<FiEdit />} rightIcon={<FiChevronDown />} display={{ base: 'none', md: 'flex' }}>
+          <MenuButton
+            as={Button}
+            leftIcon={<FiEdit />}
+            rightIcon={<FiChevronDown />}
+            display={{ base: 'none', md: 'flex' }}
+            isLoading={isRemovalLoading}
+          >
             Actions
           </MenuButton>
-          <ActionsOptions selectedAll={selectedAll} toggleSelectedAll={toggleSelectedAll} invertSelected={invertSelected} />
+          <ActionsOptions
+            selectedAll={selectedAll}
+            toggleSelectedAll={toggleSelectedAll}
+            invertSelected={invertSelected}
+            removeMeeting={removeMeeting}
+          />
         </Menu>
         <Menu>
-          <MenuButton as={IconButton} aria-label="Options" icon={<FiEdit />} variant="outline" display={{ base: 'flex', md: 'none' }} />
-          <ActionsOptions selectedAll={selectedAll} toggleSelectedAll={toggleSelectedAll} invertSelected={invertSelected} />
+          <MenuButton
+            as={IconButton}
+            aria-label="Options"
+            icon={<FiEdit />}
+            variant="outline"
+            display={{ base: 'flex', md: 'none' }}
+            isLoading={isRemovalLoading}
+          />
+          <ActionsOptions
+            selectedAll={selectedAll}
+            toggleSelectedAll={toggleSelectedAll}
+            invertSelected={invertSelected}
+            removeMeeting={removeMeeting}
+          />
         </Menu>
       </Box>
       <Box>
         <Menu>
           <MenuButton as={Button} leftIcon={<BiSort />} rightIcon={<FiChevronDown />} display={{ base: 'none', md: 'flex' }}>
-            `Sort: {sort.charAt(0) + sort.slice(1).toLowerCase()}
+            Sort: {sort.charAt(0) + sort.slice(1).toLowerCase()}
           </MenuButton>
           <SortOptions sort={sort} setSort={setSort} />
         </Menu>
@@ -129,14 +171,14 @@ export const MeetingsActions = ({
         </Menu>
       </Box>
       <Box>
-        <Button display={{ base: 'none', sm: 'flex' }} as={Link} to="create" variant="@primary" leftIcon={<FiPlus />}>
+        <Button display={{ base: 'none', sm: 'flex' }} as={Link} to="new" variant="@primary" leftIcon={<FiPlus />}>
           New Meeting
         </Button>
         <IconButton
           display={{ base: 'flex', sm: 'none' }}
           aria-label="New Meeting"
           as={Link}
-          to="create"
+          to="new"
           size="sm"
           variant="@primary"
           icon={<FiPlus />}

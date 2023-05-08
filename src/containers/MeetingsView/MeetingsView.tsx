@@ -25,7 +25,7 @@ const MeetingsView = () => {
   const filteredMeetings = filterMeetingList(sortedMeetings, filter);
   const rangedMeetings = rangeMeetingList(filteredMeetings, range);
   const pagedMeetings = rangedMeetings.slice(pageSize * (page - 1), pageSize * page);
-  const selectedAll = selected.length === rangedMeetings.length;
+  const selectedAll = !!selected.length && selected.length === rangedMeetings.length;
   const toggleSelectedAll = () => (selectedAll ? setSelected([]) : setSelected(rangedMeetings.map((m: Meeting) => m.id)));
   const invertSelected = () => setSelected(rangedMeetings.map((m: Meeting) => m.id).filter((id) => !selected.includes(id)));
 
@@ -44,6 +44,7 @@ const MeetingsView = () => {
           setFilter={setFilter}
           range={range}
           setRange={setRange}
+          selected={selected}
           selectedAll={selectedAll}
           toggleSelectedAll={toggleSelectedAll}
           invertSelected={invertSelected}
