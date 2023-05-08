@@ -1,9 +1,20 @@
-import { DataListHeader, DataListCell } from "../../components/DataList";
-import React from "react";
+import React from 'react';
 
-export const MeetingsHeader = () => {
+import { Checkbox } from '@chakra-ui/react';
+
+import { DataListCell, DataListHeader } from '../../components/DataList';
+
+type MeetingsHeaderProps = {
+  selected: boolean;
+  toggleSelectedAll: () => void;
+};
+
+export const MeetingsHeader = ({ selected, toggleSelectedAll }: MeetingsHeaderProps) => {
   return (
     <DataListHeader isVisible={{ base: false, md: true }}>
+      <DataListCell colName="checkbox" colWidth="2rem">
+        <Checkbox isChecked={selected} onChange={() => toggleSelectedAll()} />
+      </DataListCell>
       <DataListCell colName="name"> Name </DataListCell>
       <DataListCell colName="time" isVisible={{ base: false, lg: true }}>
         Time

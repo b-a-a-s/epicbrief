@@ -16,6 +16,9 @@ type MeetingsActionsProps = {
   setFilter: (filter: MeetingFilterType) => void;
   range: DateRange | undefined;
   setRange: (range: DateRange | undefined) => void;
+  selectedAll: boolean;
+  toggleSelectedAll: () => void;
+  invertSelected: () => void;
 };
 
 const FilterOptions = ({ filter, setFilter }: Pick<MeetingsActionsProps, 'filter' | 'setFilter'>) => (
@@ -27,13 +30,15 @@ const FilterOptions = ({ filter, setFilter }: Pick<MeetingsActionsProps, 'filter
   </MenuList>
 );
 
-const ActionsOptions = () => (
+const ActionsOptions = ({
+  selectedAll,
+  toggleSelectedAll,
+  invertSelected,
+}: Pick<MeetingsActionsProps, 'selectedAll' | 'toggleSelectedAll' | 'invertSelected'>) => (
   <MenuList>
-    <MenuItem>Download</MenuItem>
-    <MenuItem>Create a Copy</MenuItem>
-    <MenuItem>Mark as Draft</MenuItem>
-    <MenuItem>Delete</MenuItem>
-    <MenuItem>Attend a Workshop</MenuItem>
+    <MenuItem onClick={toggleSelectedAll}>{selectedAll ? <b>Unselect All</b> : 'Select All'}</MenuItem>
+    <MenuItem onClick={invertSelected}>Invert Selection</MenuItem>
+    <MenuItem>Delete Selected</MenuItem>
   </MenuList>
 );
 
@@ -44,7 +49,17 @@ const SortOptions = ({ sort, setSort }: Pick<MeetingsActionsProps, 'sort' | 'set
   </MenuList>
 );
 
-export const MeetingsActions = ({ sort, setSort, filter, setFilter, range, setRange }: MeetingsActionsProps) => {
+export const MeetingsActions = ({
+  sort,
+  setSort,
+  filter,
+  setFilter,
+  range,
+  setRange,
+  selectedAll,
+  toggleSelectedAll,
+  invertSelected,
+}: MeetingsActionsProps) => {
   let period = 'Period';
   if (range?.from) {
     if (!range.to) {
@@ -78,11 +93,11 @@ export const MeetingsActions = ({ sort, setSort, filter, setFilter, range, setRa
           <MenuButton as={Button} leftIcon={<FiEdit />} rightIcon={<FiChevronDown />} display={{ base: 'none', md: 'flex' }}>
             Actions
           </MenuButton>
-          <ActionsOptions />
+          <ActionsOptions selectedAll={selectedAll} toggleSelectedAll={toggleSelectedAll} invertSelected={invertSelected} />
         </Menu>
         <Menu>
           <MenuButton as={IconButton} aria-label="Options" icon={<FiEdit />} variant="outline" display={{ base: 'flex', md: 'none' }} />
-          <ActionsOptions />
+          <ActionsOptions selectedAll={selectedAll} toggleSelectedAll={toggleSelectedAll} invertSelected={invertSelected} />
         </Menu>
       </Box>
       <Box>

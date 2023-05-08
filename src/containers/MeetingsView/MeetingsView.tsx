@@ -1,35 +1,33 @@
-import { DataList } from "../../components/DataList";
-import {
-  useMeetingList,
-  sortMeetingList,
-  filterMeetingList,
-  rangeMeetingList,
-} from "../../services/meetings.service";
-import { MeetingSortType, MeetingFilterType } from "../../types/meetings.types";
-import { MeetingsActions } from "../MeetingsActions/MeetingsActions";
-import { MeetingsFooter } from "../MeetingsFooter/MeetingsFooter";
-import { MeetingsHeader } from "../MeetingsHeader/MeetingsHeader";
-import { MeetingsRow } from "../MeetingsRow/MeetingsRow";
-import { Page, PageContent } from "../Page/Page";
-import { usePaginationFromUrl } from "../Router/Router";
-import { Box, HStack, Heading } from "@chakra-ui/react";
-import React, { useContext, useMemo, useState } from "react";
-import { DateRange } from "react-day-picker";
+import React, { useContext, useMemo, useState } from 'react';
+
+import { Box, HStack, Heading } from '@chakra-ui/react';
+import { DateRange } from 'react-day-picker';
+
+import { DataList } from '../../components/DataList';
+import { filterMeetingList, rangeMeetingList, sortMeetingList, useMeetingList } from '../../services/meetings.service';
+import { Meeting, MeetingFilterType, MeetingSortType } from '../../types/meetings.types';
+import { MeetingsActions } from '../MeetingsActions/MeetingsActions';
+import { MeetingsFooter } from '../MeetingsFooter/MeetingsFooter';
+import { MeetingsHeader } from '../MeetingsHeader/MeetingsHeader';
+import { MeetingsRow } from '../MeetingsRow/MeetingsRow';
+import { Page, PageContent } from '../Page/Page';
+import { usePaginationFromUrl } from '../Router/Router';
 
 const MeetingsView = () => {
   const { page, setPage } = usePaginationFromUrl();
-  const [sort, setSort] = useState<MeetingSortType>("NEWEST");
-  const [filter, setFilter] = useState<MeetingFilterType>("ALL");
+  const [sort, setSort] = useState<MeetingSortType>('NEWEST');
+  const [filter, setFilter] = useState<MeetingFilterType>('ALL');
   const [range, setRange] = useState<DateRange | undefined>();
+  const [selected, setSelected] = useState<string[]>([]);
   const pageSize = 20;
   const data = useMeetingList({ page: page - 1, size: pageSize });
   const sortedMeetings = sortMeetingList(data?.meetings || [], sort);
   const filteredMeetings = filterMeetingList(sortedMeetings, filter);
   const rangedMeetings = rangeMeetingList(filteredMeetings, range);
-  const pagedMeetings = rangedMeetings.slice(
-    pageSize * (page - 1),
-    pageSize * page
-  );
+  const pagedMeetings = rangedMeetings.slice(pageSize * (page - 1), pageSize * page);
+  const selectedAll = selected.length === rangedMeetings.length;
+  const toggleSelectedAll = () => (selectedAll ? setSelected([]) : setSelected(rangedMeetings.map((m: Meeting) => m.id)));
+  const invertSelected = () => setSelected(rangedMeetings.map((m: Meeting) => m.id).filter((id) => !selected.includes(id)));
 
   return (
     <Page containerSize="xl">
@@ -46,11 +44,21 @@ const MeetingsView = () => {
           setFilter={setFilter}
           range={range}
           setRange={setRange}
+          selectedAll={selectedAll}
+          toggleSelectedAll={toggleSelectedAll}
+          invertSelected={invertSelected}
         />
         <DataList>
-          <MeetingsHeader />
+          <MeetingsHeader selected={selectedAll} toggleSelectedAll={toggleSelectedAll} />
           {pagedMeetings.map((meeting) => (
-            <MeetingsRow meeting={meeting} contacts={data.contacts} />
+            <MeetingsRow
+              meeting={meeting}
+              contacts={data.contacts}
+              selected={selected.includes(meeting.id)}
+              setSelected={(id: string) =>
+                selected.includes(id) ? setSelected([...selected.filter((i) => i != id)]) : setSelected([id, ...selected])
+              }
+            />
           ))}
           <MeetingsFooter
             isLoadingPage={data?.isLoading}
