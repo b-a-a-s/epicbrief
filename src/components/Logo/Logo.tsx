@@ -1,10 +1,8 @@
-import { chakra, useTheme } from '@chakra-ui/react';
 import React from 'react';
 
-// <svg width="177" height="32" >
+import { chakra } from '@chakra-ui/react';
+
 export const Logo = ({ ...rest }) => {
-  // const theme = useTheme();
-  // const gradientId = 'logo-brand-gradient';
   return (
     <chakra.svg h="1.8rem" fill="none" viewBox="0 0 177 32" {...rest}>
       <title>Epicbrief</title>

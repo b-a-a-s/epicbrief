@@ -1,5 +1,6 @@
-import { Flex, FlexProps, useMediaQuery } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
+
+import { Flex, FlexProps, useMediaQuery } from '@chakra-ui/react';
 
 const useFixViewport = () => {
   useEffect(() => {

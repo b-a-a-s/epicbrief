@@ -5,8 +5,8 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import * as ReactDOM from 'react-dom/client';
 
-import { ErrorBoundary } from './components/ErrorBoundary';
-import { Viewport } from './components/Viewport';
+import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
+import { Viewport } from './components/Viewport/Viewport';
 import './config';
 import { App } from './containers/App/App';
 import reportWebVitals from './reportWebVitals';

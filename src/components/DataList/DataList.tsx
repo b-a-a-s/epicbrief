@@ -1,3 +1,5 @@
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+
 import {
   Accordion,
   AccordionButton,
@@ -11,7 +13,6 @@ import {
   useBreakpointValue,
 } from '@chakra-ui/react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 
 type DataListColumns = Record<string, DataListCellProps>;
 type DataListContextValue = {
@@ -21,7 +22,7 @@ type DataListContextValue = {
 };
 type DataListHeaderContextValue = boolean;
 
-export const DataListContext = React.createContext<DataListContextValue>({} as any);
+export const DataListContext = React.createContext<DataListContextValue>({} as DataListContextValue);
 export const DataListHeaderContext = React.createContext<DataListHeaderContextValue>(false);
 
 export type DataListCellProps = FlexProps & {

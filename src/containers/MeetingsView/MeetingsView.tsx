@@ -1,9 +1,9 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Box, HStack, Heading } from '@chakra-ui/react';
 import { DateRange } from 'react-day-picker';
 
-import { DataList } from '../../components/DataList';
+import { DataList } from '../../components/DataList/DataList';
 import { filterMeetingList, rangeMeetingList, sortMeetingList, useMeetingList } from '../../services/meetings.service';
 import { Meeting, MeetingFilterType, MeetingSortType } from '../../types/meetings.types';
 import { MeetingsActions } from '../MeetingsActions/MeetingsActions';
@@ -50,7 +50,7 @@ const MeetingsView = () => {
           invertSelected={invertSelected}
         />
         <DataList>
-          <MeetingsHeader selected={selectedAll} toggleSelectedAll={toggleSelectedAll} />
+          <MeetingsHeader selected={selectedAll} toggleSelectedAll={toggleSelectedAll} meetings={data} />
           {pagedMeetings.map((meeting) => (
             <MeetingsRow
               meeting={meeting}

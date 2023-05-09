@@ -2,100 +2,90 @@ import React from 'react';
 
 import { Box, Button, ButtonGroup, HStack, Heading, SkeletonText, Stack, Text } from '@chakra-ui/react';
 import { Formiz, useForm } from '@formiz/core';
+import dayjs from 'dayjs';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ErrorPage } from '../../components/ErrorPage';
-import { useToastError, useToastSuccess } from '../../components/Toast';
-// import { useUser, useUserUpdate } from '@/spa/admin/users/users.service';
+import { ErrorPage } from '../../components/ErrorPage/ErrorPage';
+import { useToastError, useToastSuccess } from '../../components/Toast/Toast';
+import { useMeeting, useMeetingUpdate } from '../../services/meetings.service';
+import { Meeting } from '../../types/meetings.types';
+import { MeetingForm } from '../MeetingForm/MeetingForm';
 import { Page, PageBottomBar, PageContent, PageTopBar } from '../Page/Page';
 import { Loader } from '../Router/Router';
-
-// import { UserForm } from './UserForm';
 
 export const MeetingUpdateView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  // const user = useUser(id, {
-  // refetchOnWindowFocus: false,
-  // enabled: !!login,
-  // });
+  const data = useMeeting(id || '', { refetchOnWindowFocus: false, enabled: !!id });
+  const meeting = (data?.meeting || {}) as Meeting;
+  const initialValues = {
+    name: meeting?.properties?.hs_meeting_title,
+    time: dayjs(meeting?.properties?.hs_meeting_start_time).format('YYYY-MM-DDTHH:mm'),
+    account: meeting?.associations?.contacts?.results?.[0]?.id,
+    notes: meeting?.properties?.hs_internal_meeting_notes,
+  };
 
   const form = useForm({ subscribe: false });
 
   const toastSuccess = useToastSuccess();
   const toastError = useToastError();
 
-  // const { mutate: editUser, isLoading: editUserIsLoading } = useUserUpdate({
-  // onError: (error) => {
-  // if (error.response) {
-  // const { title, errorKey } = error.response.data;
-  // toastError({
-  // title: t('users:update.feedbacks.updateError.title'),
-  // description: title,
-  // });
-  // switch (errorKey) {
-  // case 'userexists':
-  // form.invalidateFields({
-  // login: t('users:data.login.alreadyUsed'),
-  // });
-  // break;
-  // case 'emailexists':
-  // form.invalidateFields({
-  // email: t('users:data.email.alreadyUsed'),
-  // });
-  // break;
-  // }
-  // }
-  // },
-  // onSuccess: () => {
-  // toastSuccess({
-  // title: t('users:update.feedbacks.updateSuccess.title'),
-  // });
-  // navigate(-1);
-  // },
-  // });
-  // const submitEditUser = (values: TODO) => {
-  // const userToSend = {
-  // id: user.data?.id,
-  // ...values,
-  // };
-  // editUser(userToSend);
-  // };
+  const { mutate: editMeeting, isLoading: editMeetingIsLoading } = useMeetingUpdate({
+    onError: (error) => {
+      if (error.response) {
+        const { title, errorKey } = error.response.data;
+        toastError({ title: "Couldn't update meeting", description: `${title} - ${errorKey}` });
+      }
+    },
+    onSuccess: () => {
+      toastSuccess({
+        title: 'Meeting updated',
+      });
+      navigate(-1);
+    },
+  });
+  const submitEditMeeting = (values: Meeting) => {
+    const meetingToSend = { ...values, id: meeting?.id, oldAccount: initialValues.account };
+    editMeeting(meetingToSend);
+  };
 
   return (
     <Page containerSize="md" isFocusMode>
       <PageTopBar showBack onBack={() => navigate(-1)}>
         <HStack spacing="4">
           <Box flex="1">
-            {false || false ? (
+            {data.isLoading || data.isError ? (
               <SkeletonText maxW="6rem" noOfLines={2} />
             ) : (
               <Stack spacing="0">
-                <Heading size="sm">000</Heading>
+                <Heading size="sm">{initialValues.name}</Heading>
                 <Text fontSize="xs" color="gray.600" _dark={{ color: 'gray.300' }}>
-                  Meeting ID: 000
+                  {initialValues.time}
                 </Text>
               </Stack>
             )}
           </Box>
         </HStack>
       </PageTopBar>
-      {/* {user.isFetching && <Loader />}
-      {user.isError && !user.isFetching && <ErrorPage errorCode={404} />}
-      {!user.isError && !user.isFetching && ( */}
-      <Formiz id="create-user-form" onValidSubmit={console.log} connect={form} initialValues={{}}>
-        <form noValidate onSubmit={form.submit}>
-          <PageContent>{/* <UserForm /> */}</PageContent>
-          <PageBottomBar>
-            <ButtonGroup justifyContent="space-between">
-              <Button onClick={() => navigate(-1)}>Cancel</Button>
-              <Button type="submit" variant="@primary" isLoading={false}>
-                Save
-              </Button>
-            </ButtonGroup>
-          </PageBottomBar>
-        </form>
-      </Formiz>
+      {data.isFetching && <Loader />}
+      {data.isError && !data.isFetching && <ErrorPage errorCode={404} />}
+      {!data.isError && !data.isFetching && (
+        <Formiz id="create-meeting-form" onValidSubmit={submitEditMeeting} connect={form} initialValues={initialValues}>
+          <form noValidate onSubmit={form.submit}>
+            <PageContent>
+              <MeetingForm contacts={data?.contacts || []} />
+            </PageContent>
+            <PageBottomBar>
+              <ButtonGroup justifyContent="space-between">
+                <Button onClick={() => navigate(-1)}>Cancel</Button>
+                <Button type="submit" variant="@primary" isLoading={editMeetingIsLoading}>
+                  Save
+                </Button>
+              </ButtonGroup>
+            </PageBottomBar>
+          </form>
+        </Formiz>
+      )}
     </Page>
   );
 };

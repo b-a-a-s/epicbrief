@@ -5,8 +5,8 @@ import { FaMoon, FaSun } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { Logo } from '../../components/Logo';
-import { Viewport } from '../../components/Viewport';
+import { Logo } from '../../components/Logo/Logo';
+import { Viewport } from '../../components/Viewport/Viewport';
 
 type LayoutContextValue = {
   isFocusMode: boolean;

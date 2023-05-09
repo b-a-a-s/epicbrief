@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { Box, Button, HStack, IconButton, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import { DateRange, DayPicker } from 'react-day-picker';
 import { BiCalendar, BiFilter, BiSort } from 'react-icons/bi';
 import { FiChevronDown, FiEdit, FiPlus } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-import { useToastError, useToastSuccess } from '../../components/Toast';
+import { useToastError, useToastSuccess } from '../../components/Toast/Toast';
 import { useMeetingRemove } from '../../services/meetings.service';
 import { MeetingFilterType, MeetingSortType } from '../../types/meetings.types';
 
@@ -82,9 +82,9 @@ export const MeetingsActions = ({
   let period = 'Period';
   if (range?.from) {
     if (!range.to) {
-      period = `${format(range.from, 'dd, MMM yyyy')}`;
+      period = dayjs(range.from).format('DD, MMM YYYY');
     } else if (range.to) {
-      period = ` ${format(range.from, 'dd, MMM yyyy')}– ${format(range.to, 'dd, MMM yyyy')} `;
+      period = `${dayjs(range.from).format('DD, MMM YYYY')}– ${dayjs(range.to).format('DD, MMM YYYY')} `;
     }
   }
   return (
@@ -171,14 +171,14 @@ export const MeetingsActions = ({
         </Menu>
       </Box>
       <Box>
-        <Button display={{ base: 'none', sm: 'flex' }} as={Link} to="new" variant="@primary" leftIcon={<FiPlus />}>
+        <Button display={{ base: 'none', sm: 'flex' }} as={Link} to="meetings/new" variant="@primary" leftIcon={<FiPlus />}>
           New Meeting
         </Button>
         <IconButton
           display={{ base: 'flex', sm: 'none' }}
           aria-label="New Meeting"
           as={Link}
-          to="new"
+          to="meetings/new"
           size="sm"
           variant="@primary"
           icon={<FiPlus />}

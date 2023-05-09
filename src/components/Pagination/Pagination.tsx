@@ -1,7 +1,9 @@
-import { Icon } from '../Icons';
-import { Box, HStack, IconButton, IconButtonProps, Spinner, StackProps } from '@chakra-ui/react';
 import React, { FC, useContext } from 'react';
+
+import { Box, HStack, IconButton, IconButtonProps, Spinner, StackProps } from '@chakra-ui/react';
 import { FiChevronLeft, FiChevronRight, FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
+
+import { Icon } from '../Icons/Icons';
 
 export const getPaginationInfo = ({ page = 1, pageSize = 10, totalItems = 0 }) => {
   const firstItemOnPage = (page - 1) * pageSize + 1;

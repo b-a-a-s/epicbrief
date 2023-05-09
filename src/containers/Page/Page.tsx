@@ -1,15 +1,17 @@
-import { useFocusMode, useLayoutContext } from '../Layout/Layout';
-import { Box, Flex, FlexProps, HStack, IconButton, Stack, useTheme } from '@chakra-ui/react';
 import React, { useContext } from 'react';
+
+import { Box, Flex, FlexProps, HStack, IconButton, Stack, useTheme } from '@chakra-ui/react';
 import { FiArrowLeft } from 'react-icons/fi';
 import useMeasure from 'react-use-measure';
+
+import { useFocusMode, useLayoutContext } from '../Layout/Layout';
 
 type PageContextValue = {
   hideContainer: boolean;
   containerSize: keyof typeof containerSizes;
 };
 
-const PageContext = React.createContext<PageContextValue>(null as any);
+const PageContext = React.createContext<PageContextValue>({} as PageContextValue);
 
 const containerSizes = {
   sm: '60ch',

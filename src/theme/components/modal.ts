@@ -25,7 +25,7 @@ const baseStyleCloseButton: SystemStyleObject = {
   insetEnd: 2,
 };
 
-const baseStyleBody: SystemStyleFunction = (_) => {
+const baseStyleBody: SystemStyleFunction = () => {
   return {
     px: 4,
     py: 4,

@@ -23,6 +23,9 @@ export type Meeting = {
       }[];
     };
   };
+  name?: string;
+  time?: string;
+  notes?: string;
 };
 
 export type Contact = {
@@ -42,6 +45,7 @@ export type Contact = {
 
 export type MeetingList = {
   meetings: Meeting[];
+  meeting?: Meeting;
   contacts: Contact[];
-  totalItems: number;
+  totalItems?: number;
 };

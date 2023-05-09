@@ -3,8 +3,8 @@ import React, { Suspense, useCallback } from 'react';
 import { Center, Spinner } from '@chakra-ui/react';
 import { BrowserRouter, Route, Routes, useNavigate, useSearchParams } from 'react-router-dom';
 
-import { ErrorBoundary } from '../../components/ErrorBoundary';
-import { ErrorPage } from '../../components/ErrorPage';
+import { ErrorBoundary } from '../../components/ErrorBoundary/ErrorBoundary';
+import { ErrorPage } from '../../components/ErrorPage/ErrorPage';
 import { Layout } from '../Layout/Layout';
 
 export const Loader = () => (
@@ -47,8 +47,8 @@ export const Router = () => {
           <Suspense fallback={<Loader />}>
             <Routes>
               <Route path="/" element={<MeetingsView />} />
-              <Route path="/new" element={<MeetingCreateView />} />
-              <Route path="/:id" element={<MeetingUpdateView />} />
+              <Route path="/meetings/new" element={<MeetingCreateView />} />
+              <Route path="/meetings/:id" element={<MeetingUpdateView />} />
               <Route path="*" element={<ErrorPage errorCode={404} />} />
             </Routes>
           </Suspense>

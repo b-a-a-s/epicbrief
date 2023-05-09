@@ -3,22 +3,46 @@ import { UseMutationOptions, UseQueryOptions, useMutation, useQuery, useQueryCli
 import Axios, { AxiosError } from 'axios';
 import { DateRange } from 'react-day-picker';
 
-// import { useToastError, useToastSuccess } from '../../components/Toast';
 import { Meeting, MeetingList } from '../types/meetings.types';
 
-type MeetingWithIdOnly = { id: string };
+type MeetingWithIdOnly = { id: string; name?: string; date?: string; notes?: string };
 
-// type UserMutateError = {
-// title: string;
-// errorKey: "userexists" | "emailexists";
-// };
-
-const MEETINGS_API_BASE_URL = 'https://us-central1-epicbrief-c47c8.cloudfunctions.net/meetings';
-// const MEETINGS_API_BASE_URL = 'http://127.0.0.1:5001/epicbrief-c47c8/us-central1/meetings';
-
-export const useMeetingRemove = (config: UseMutationOptions<void, unknown, MeetingWithIdOnly> = {}) => {
+type MeetingMutateError = {
+  title: string;
+  errorKey: 'meetingexists';
+};
+export const useMeetingUpdate = (config: UseMutationOptions<unknown, AxiosError<MeetingMutateError>, MeetingWithIdOnly> = {}) => {
   const queryClient = useQueryClient();
-  return useMutation((meeting: MeetingWithIdOnly): Promise<void> => Axios.delete(`${MEETINGS_API_BASE_URL}/${meeting.id}`), {
+  return useMutation((payload: MeetingWithIdOnly) => Axios.patch(`/meetings/${payload.id}`, payload), {
+    ...config,
+    onSuccess: (data, payload, ...rest) => {
+      queryClient.cancelQueries(meetingsKeys.meetings._def);
+      queryClient
+        .getQueryCache()
+        .findAll(meetingsKeys.meetings._def)
+        .forEach(({ queryKey }) => {
+          queryClient.setQueryData<MeetingList | undefined>(queryKey, (cachedData) => {
+            if (!cachedData) return;
+            return {
+              ...cachedData,
+              content: (cachedData.meetings || []).map((meeting: Meeting) =>
+                meeting.id === payload.id ? { ...meeting, ...payload } : meeting
+              ),
+            };
+          });
+        });
+      queryClient.invalidateQueries(meetingsKeys.meetings._def);
+      queryClient.invalidateQueries(meetingsKeys.meeting({ id: payload.id }));
+      if (config.onSuccess) {
+        config.onSuccess(data, payload, ...rest);
+      }
+    },
+  });
+};
+
+export const useMeetingCreate = (config: UseMutationOptions<unknown, AxiosError<MeetingMutateError>, MeetingWithIdOnly> = {}) => {
+  const queryClient = useQueryClient();
+  return useMutation((payload) => Axios.post('/meetings', payload), {
     ...config,
     onSuccess: (...args) => {
       queryClient.invalidateQueries(meetingsKeys.meetings._def);
@@ -27,9 +51,33 @@ export const useMeetingRemove = (config: UseMutationOptions<void, unknown, Meeti
   });
 };
 
-const meetingsKeys = createQueryKeys('usersService', {
+export const useMeetingRemove = (config: UseMutationOptions<void, unknown, MeetingWithIdOnly> = {}) => {
+  const queryClient = useQueryClient();
+  return useMutation((meeting: MeetingWithIdOnly): Promise<void> => Axios.delete(`/meetings/${meeting.id}`), {
+    ...config,
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries(meetingsKeys.meetings._def);
+      config?.onSuccess?.(...args);
+    },
+  });
+};
+
+const meetingsKeys = createQueryKeys('meetingsService', {
   meetings: (params: { limit?: number; after?: number }) => [params],
+  meeting: (params: { id?: string }) => [params],
 });
+
+export const useMeeting = (
+  id: string,
+  config: UseQueryOptions<Meeting, AxiosError, MeetingList, MeetingsKeys['meeting']['queryKey']> = {}
+) => {
+  const result = useQuery(meetingsKeys.meeting({ id }).queryKey, (): Promise<Meeting> => Axios.get(`/meetings/${id}`), {
+    enabled: !!id,
+    ...config,
+  });
+
+  return { ...result.data, ...result };
+};
 
 type MeetingsKeys = inferQueryKeys<typeof meetingsKeys>;
 
@@ -39,10 +87,9 @@ export const useMeetingList = (
 ) => {
   const result = useQuery(
     meetingsKeys.meetings({ limit: 20, after: 0 }).queryKey,
-    (): Promise<MeetingList> => Axios.get(`${MEETINGS_API_BASE_URL}?limit=${limit}&after=${page}`),
+    (): Promise<MeetingList> => Axios.get(`/meetings?limit=${limit}&after=${page}`),
     { keepPreviousData: true, ...config }
   );
-  console.log('result', result.data);
 
   const { meetings, contacts } = result.data || {};
   const totalItems = meetings?.length;
@@ -60,85 +107,6 @@ export const useMeetingList = (
     ...result,
   };
 };
-
-// export const useUser = (
-// userLogin?: string,
-// config: UseQueryOptions<
-// User,
-// AxiosError,
-// User,
-// UsersKeys["user"]["queryKey"]
-// > = {}
-// ) => {
-// const result = useQuery(
-// usersKeys.user({ login: userLogin }).queryKey,
-// (): Promise<User> => Axios.get(`${USERS_BASE_URL}/${userLogin}`),
-// {
-// enabled: !!userLogin,
-// ...config,
-// }
-// );
-
-// return { user: result.data, ...result };
-// };
-
-// export const useUserUpdate = (
-// config: UseMutationOptions<User, AxiosError<UserMutateError>, User> = {}
-// ) => {
-// const queryClient = useQueryClient();
-// return useMutation((payload) => Axios.put(USERS_BASE_URL, payload), {
-// ...config,
-// onSuccess: (data, payload, ...rest) => {
-// queryClient.cancelQueries(usersKeys.users._def);
-// queryClient
-// .getQueryCache()
-// .findAll(usersKeys.users._def)
-// .forEach(({ queryKey }) => {
-// queryClient.setQueryData<UserList | undefined>(
-// queryKey,
-// (cachedData) => {
-// if (!cachedData) return;
-// return {
-// ...cachedData,
-// content: (cachedData.content || []).map((user) =>
-// user.id === data.id ? data : user
-// ),
-// };
-// }
-// );
-// });
-// queryClient.invalidateQueries(usersKeys.users._def);
-// queryClient.invalidateQueries(usersKeys.user({ login: payload.login }));
-// if (config.onSuccess) {
-// config.onSuccess(data, payload, ...rest);
-// }
-// },
-// });
-// };
-
-// export const useUserCreate = (
-// config: UseMutationOptions<
-// User,
-// AxiosError<UserMutateError>,
-// Pick<
-// User,
-// "login" | "email" | "firstName" | "lastName" | "langKey" | "authorities"
-// >
-// > = {}
-// ) => {
-// const queryClient = useQueryClient();
-// return useMutation(
-// ({ langKey = DEFAULT_LANGUAGE_KEY, ...payload }) =>
-// Axios.post("/admin/users", { langKey, ...payload }),
-// {
-// ...config,
-// onSuccess: (...args) => {
-// queryClient.invalidateQueries(usersKeys.users._def);
-// config?.onSuccess?.(...args);
-// },
-// }
-// );
-// };
 
 export const sortMeetingList = (meetings: Meeting[], sort: string) => {
   if (sort === 'NEWEST') {

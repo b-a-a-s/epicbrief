@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 
 import { Center, Heading, Link, Stack, Text } from '@chakra-ui/react';
 
-import { Logo } from '../Logo';
+import { Logo } from '../Logo/Logo';
 import { Illustration403 } from './Illustration403';
 import { Illustration404 } from './Illustration404';
 import { IllustrationDefault } from './IllustrationDefault';

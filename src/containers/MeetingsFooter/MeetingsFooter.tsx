@@ -1,4 +1,6 @@
-import { DataListFooter } from '../../components/DataList';
+import React from 'react';
+
+import { DataListFooter } from '../../components/DataList/DataList';
 import {
   Pagination,
   PaginationButtonFirstPage,
@@ -6,8 +8,7 @@ import {
   PaginationButtonNextPage,
   PaginationButtonPrevPage,
   PaginationInfo,
-} from '../../components/Pagination';
-import React from 'react';
+} from '../../components/Pagination/Pagination';
 
 type MeetingsFooterProps = {
   isLoadingPage: boolean;
@@ -30,26 +31,3 @@ export const MeetingsFooter = ({ isLoadingPage, setPage, page, pageSize, totalIt
     </DataListFooter>
   );
 };
-// {meetings.isError && (
-// <Center p={4}>
-// <Alert status="error">
-// <AlertIcon />
-// <AlertTitle>
-// {t("meetings:feedbacks.loadingUserError.title")}
-// </AlertTitle>
-// <AlertDescription>
-// {t("meetings:feedbacks.loadingUserError.description")}
-// <Button
-// colorScheme="error"
-// variant="ghost"
-// size="sm"
-// leftIcon={<FiRefreshCw />}
-// isLoading={meetings.isLoadingPage}
-// onClick={() => meetings.refetch()}
-// >
-// {t("meetings:list.actions.refetch")}
-// </Button>
-// </AlertDescription>
-// </Alert>
-// </Center>
-// )}

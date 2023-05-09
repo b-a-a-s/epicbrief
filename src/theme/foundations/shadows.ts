@@ -1,5 +1,6 @@
-import { colors } from './colors';
 import { transparentize } from '@chakra-ui/theme-tools';
+
+import { colors } from './colors';
 
 const createOutline = (colorScheme = 'gray') => `0 0 0 3px ${transparentize(`${colorScheme}.500`, 0.3)({ colors })}`;
 

@@ -1,3 +1,5 @@
+import React, { FC } from 'react';
+
 import {
   Alert,
   AlertDescription,
@@ -13,7 +15,6 @@ import {
   ModalOverlay,
   useDisclosure,
 } from '@chakra-ui/react';
-import React, { FC } from 'react';
 import { FallbackProps, ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 
 const ErrorFallback = ({ error }: FallbackProps) => {
