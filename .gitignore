@@ -23,3 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 components-lib
+.env
+**/.env
+
+cypress/videos
+cypress/screenshots
+
