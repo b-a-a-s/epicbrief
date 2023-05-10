@@ -14,6 +14,8 @@ import { Page, PageBottomBar, PageContent, PageTopBar } from '../Page/Page';
 import { Loader } from '../Router/Router';
 
 export const MeetingUpdateView = () => {
+  const regex = /(?<=<[^>]*>)[^<>]+(?=<)/g;
+  const cleanNote = (note: string) => (new RegExp('<[^>]+>', 'g').test(note) ? note.match(regex)?.join('') || '' : note);
   const { id } = useParams();
   const navigate = useNavigate();
   const data = useMeeting(id || '', { refetchOnWindowFocus: false, enabled: !!id });
@@ -22,7 +24,7 @@ export const MeetingUpdateView = () => {
     name: meeting?.properties?.hs_meeting_title,
     time: dayjs(meeting?.properties?.hs_meeting_start_time).format('YYYY-MM-DDTHH:mm'),
     account: meeting?.associations?.contacts?.results?.[0]?.id,
-    notes: meeting?.properties?.hs_internal_meeting_notes,
+    notes: cleanNote(meeting?.properties?.hs_internal_meeting_notes),
   };
 
   const form = useForm({ subscribe: false });

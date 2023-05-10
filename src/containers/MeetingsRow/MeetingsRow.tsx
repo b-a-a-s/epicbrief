@@ -35,7 +35,7 @@ export const MeetingsRow = ({ meeting, contacts, selected, setSelected }: Meetin
       </DataListCell>
       <DataListCell colName="name">
         <Link to={`meetings/${meeting.id}`}>
-          <Text noOfLines={1} maxW="full">
+          <Text noOfLines={1} maxW="full" fontWeight="bold" color="brand.600" _dark={{ color: 'brand.300' }}>
             {meeting.properties.hs_meeting_title}
           </Text>
         </Link>
